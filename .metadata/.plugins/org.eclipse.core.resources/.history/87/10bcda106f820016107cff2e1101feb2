@@ -1,0 +1,6 @@
+package ocdSim;
+
+public class FoodObjectData extends PComponent {
+
+	
+}

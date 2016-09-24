@@ -1,0 +1,5 @@
+package ocdSim;
+
+public interface GameMode {
+
+}

@@ -1,0 +1,21 @@
+package ocdSim;
+
+public class OverworldFood extends OverworldObject {
+
+
+	  private FoodObjectData data;
+	  
+	  
+	@Override
+	public void handleCollisionWithPlayer() {
+		 pimulator.modeTransitioner.encounteredFood(this);
+
+	}
+
+	@Override
+	protected void render() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

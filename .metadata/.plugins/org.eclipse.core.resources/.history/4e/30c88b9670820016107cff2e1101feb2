@@ -1,0 +1,17 @@
+package ocdSim;
+
+public class OverworldJewel extends OverworldObject {
+
+	@Override
+	public void handleCollisionWithPlayer() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void render() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

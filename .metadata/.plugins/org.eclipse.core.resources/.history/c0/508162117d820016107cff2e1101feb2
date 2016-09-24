@@ -1,0 +1,616 @@
+package ocdSim;
+import processing.core.*;
+import java.util.*;
+public class Overworld extends PComponent implements GameMode{
+
+
+	class OverWorld implements GameMode {
+		public static final int RESET_QUIT_DELAY=90;
+		private GameWorld gameWorld;
+		private CameraController cameraController;
+		private NavigationInputHandler inputHandler;
+		private CollisionChecker collisionChecker;
+		private LayoutReader layoutReader;
+
+		//stuff that goes on the UI
+		final float DEPLETION_RATE=.05f;
+		private EnergyBar energyBar;
+
+		boolean left, up, down, right, mouseDown;
+
+		private OverworldFood pendingFood; 
+		private Concern pendingConcern;
+
+
+		OverWorld() {
+
+			layoutReader=new LayoutReader();
+			gameWorld=new GameWorld(new PVector(pSimulator.width/2, pSimulator.height/2), pSimulator.width, pSimulator.height, pSimulator.height*2);
+			gameWorld.mapTextures(null, null, null, null, ground);
+			cameraController=new CameraController();
+			inputHandler=new NavigationInputHandler();
+			collisionChecker=new CollisionChecker(cameraController);
+			pSimulator.textAlign(pSimulator.CENTER);
+			PVector energyBarDimensions=new PVector(pSimulator.width/3, 50);
+			energyBar=new EnergyBar(new PVector(energyBarDimensions.x/2, energyBarDimensions.y/2, 0), energyBarDimensions);
+		}
+
+
+
+		public OverworldFood getPendingFood() {
+			return pendingFood;
+		}
+
+		private void repleteEnergy(float amount) {
+			energyBar.replete(amount);
+		}
+
+
+		public void run() {
+			drawBackGround();
+			inputHandler.update();
+			collisionChecker.update();
+			gameWorld.draw();
+			cameraController.viewScene();
+			updateEnergyBar();
+			showjewelsCollectedCollected();
+		}
+
+
+		private void showjewelsCollectedCollected() {
+			pSimulator.pushMatrix();
+			pSimulator.pushStyle();
+			pSimulator.translate(width-200, 80);
+			pSimulator.fill(255);
+			pSimulator.textSize(30);
+			pSimulator.text("Jewels:  "+jewelsCollected, 0, 0);
+			pSimulator.popMatrix();
+			pSimulator.popStyle();
+		}
+
+
+		public void prepareToRun() {
+			pendingFood=null;
+			left=false;
+			right=false;
+			up=false;
+			down=false;
+		}
+
+		public void handleKeyPressed() {
+			if (pSimulator.key==pSimulator.CODED) {
+				if (pSimulator.keyCode==pSimulator.LEFT) {
+					left=true;
+				}
+
+				if (pSimulator.keyCode==pSimulator.UP) {
+					up=true;
+				}
+
+				if (pSimulator.keyCode==pSimulator.DOWN) {
+					down=true;
+				}
+
+				if (pSimulator.keyCode==pSimulator.RIGHT) {
+					right=true;
+				}
+			}
+		}
+
+		public void handleKeyReleased() {
+			if (pSimulator.key==pSimulator.CODED) {
+				if (pSimulator.keyCode==pSimulator.LEFT) {
+					left=false;
+				}
+
+				if (pSimulator.keyCode==pSimulator.UP) {
+					up=false;
+				}
+
+				if (pSimulator.keyCode==pSimulator.RIGHT) {
+					right=false;
+				}
+
+				if (pSimulator.keyCode==pSimulator.DOWN) {
+					down=false;
+				}
+			}
+		}
+
+
+
+		public void handleMousePressed(){mouseDown=true;}
+		public void handleMouseReleased(){mouseDown=false;}
+
+
+		public void drawBackGround() {
+			pSimulator.background(0);
+		}
+
+
+		public void updateEnergyBar() {
+			if (pSimulator.frameCount%60==0) {
+				energyBar.deplete(DEPLETION_RATE);
+			}
+			if (energyBar.empty()) {
+				OCDSimulator.getModeTransitioner().gameOver();
+			}
+			energyBar.draw();
+		}
+
+
+
+
+		/*private inner class to handle navigating through the overworld*/
+		class NavigationInputHandler {
+			final float D_ROTATE=pSimulator.radians(2);
+			final float SCROLL_SPEED=5;
+			float angleEyeGameWorld;
+			float currViewAngle;
+			PVector forward;
+			PVector backward;
+			PVector leftWard=new PVector(0, -D_ROTATE, 0);
+			PVector rightWard=new PVector(0, D_ROTATE, 0);
+
+
+			NavigationInputHandler() {
+				initializeVectors();
+				updateVectors();
+			}
+
+			void initializeVectors() {
+				angleEyeGameWorld=pSimulator.atan2(cameraController.eyePosition.z-gameWorld.origin.z, cameraController.eyePosition.x-gameWorld.origin.x);
+				forward=new PVector();
+				backward=new PVector();
+			}
+
+			/*update the forward/backward vectors so that the objects move towards the player regardless of the rotation of the gameworld.
+     because we never actually move the origins of either the gameworld or the eye, we move the objects towards the point
+     where the eye would be if -it- had moved such that its angle with the gameworld origin would be equal to that of the gameworld origin's current
+     rotation*/
+
+			void updateVectors() {
+				currViewAngle=angleEyeGameWorld+gameWorld.getAngle();
+				forward.x=pSimulator.cos(currViewAngle)*SCROLL_SPEED;
+				forward.z=pSimulator.sin(currViewAngle)*SCROLL_SPEED;
+				currViewAngle+=pSimulator.PI; //backwards
+				backward.x=pSimulator.cos(currViewAngle)*SCROLL_SPEED; 
+				backward.z=pSimulator.sin(currViewAngle)*SCROLL_SPEED;
+			}
+
+
+			void update() {
+				updateVectors();
+				rotateByKey();
+				scrollByKey();
+				panByMouse();
+			}
+
+
+
+			void panByMouse() {
+				if (mouseDown) {
+					cameraController.eyePosition.y+=pSimulator.mouseY-pSimulator.pmouseY;
+				}
+			}
+
+
+			void rotateByKey() {
+				if (left) {
+					gameWorld.turn(leftWard);
+				}
+				if (right) {
+					gameWorld.turn(rightWard);
+				}
+			}
+
+
+			void scrollByKey() {
+				if (up) {
+					gameWorld.move(forward);
+				}
+				if (down) {
+					gameWorld.move(backward);
+				}
+			}
+		}
+
+
+
+		/* a class whose job is to check whether a given scrollable object in in the "collision view" of the camera.
+   Because this class must know the details of the gameWorld's current angle, its origin, as well as the fixed position of the camera,
+   I have placed the logic in its own class */
+
+		class CollisionChecker {
+			//a window around the camera in which objects are "within view"
+			float distanceOriginViewOrigin; //cache the absolute distance between the game world origin and the origin of the camera view zone
+			float angleOriginViewOrigin; //the initial angle between the origin of the gameworld and the position of the camera view zone
+			CameraController camController;
+			float currPerceivedViewZoneX, currPerceivedViewZoneZ; //taking the gameworld rotation into account, the current 
+			//apparent position of the camera view zone
+
+			CollisionChecker(CameraController camController) {
+				this.camController=camController;
+				distanceOriginViewOrigin=pSimulator.dist(camController.viewOrigin.x, camController.viewOrigin.z, gameWorld.origin.x, gameWorld.origin.z);
+				angleOriginViewOrigin=pSimulator.atan2(camController.viewOrigin.z-gameWorld.origin.z, camController.viewOrigin.x-gameWorld.origin.x); //angle between origin and the testing point
+			}
+
+
+			void update() {
+				//update the current perceived camera view zone location, given the change in the gameworld y rotation
+				currPerceivedViewZoneX=gameWorld.origin.x+pSimulator.cos(angleOriginViewOrigin+gameWorld.quaternion.y)*distanceOriginViewOrigin;
+				currPerceivedViewZoneZ=gameWorld.origin.z+pSimulator.sin(angleOriginViewOrigin+gameWorld.quaternion.y)*distanceOriginViewOrigin;
+			}
+
+			/*perceivedTranslationX, Y: the displacement of the object from the gameWorld origin.
+     triggerRadius: radius of the trigger circle drawn on the plane around each object, which we use to verify collision with
+     the camera view radius */
+			boolean collidedWithCamera(float perceivedTranslationX, float perceivedTranslationZ, float triggerRadius) {
+				//1. calculate the distance between the perceived translation and the gameworld origin
+				float distPointOrigin=dist(perceivedTranslationX, perceivedTranslationZ, gameWorld.origin.x, gameWorld.origin.z);
+				if (pSimulator.abs(distanceOriginViewOrigin-distPointOrigin)>cameraController.viewRadius+triggerRadius) return false; //the two circles must have same diameter (*taking the sizes of the points on the circles into account)
+				//2. calculate angle between gameworld and the perceived translation of the point
+				float anglePointOrigin=pSimulator.atan2(perceivedTranslationZ-gameWorld.origin.z, perceivedTranslationX-gameWorld.origin.x);
+				//3. calculate the perceived point of the object, taking the angle between the gameworld and perceived translation into account
+				float perceivedX=gameWorld.origin.x+pSimulator.cos(anglePointOrigin)*distPointOrigin;
+				float perceivedZ=gameWorld.origin.z+pSimulator.sin(anglePointOrigin)*distPointOrigin;
+				return pSimulator.dist(currPerceivedViewZoneX, currPerceivedViewZoneZ, perceivedX, perceivedZ)<cameraController.viewRadius+triggerRadius;
+			}
+
+
+			boolean collidedWithCamera(OverworldObject gameObject) {
+				return collidedWithCamera(gameObject.absoluteTranslation().x, gameObject.absoluteTranslation().z, gameObject.checkRadius());
+			}
+		}
+
+
+
+
+
+		/* from now on, you will only be able to "move" forward or backwards. you will move "left" and "right" by rotating the gameworld first.
+   I dont want to actually change the position of the camera. it should stay fixed. Likewie,
+   the box won't move. only the scroll able objects will move (NPCS and other objects)*/
+
+		class CameraController {
+
+			//camera variables
+			static final float ANGLE=pSimulator.PI/2;
+			PVector sceneCenter=new PVector();
+			PVector eyePosition=new PVector();
+			PVector upwardAxis=new PVector(0, 1, 0);
+			PVector nextPosition=new PVector();
+
+			//a window around the camera in which objects are "within view"
+			float viewRadius=50;
+			PVector viewOrigin;
+
+
+			CameraController() {
+				restoreDefaults();
+			}
+
+			void pan(PVector towards) {
+				sceneCenter.add(towards);
+				eyePosition.add(towards);
+			}
+
+
+
+			void viewScene() {
+				pSimulator.camera(eyePosition.x, eyePosition.y, eyePosition.z, sceneCenter.x, sceneCenter.y, sceneCenter.z, upwardAxis.x, upwardAxis.y, upwardAxis.z);
+			}
+
+			void restoreDefaults() {
+				sceneCenter.x=pSimulator.width/2;
+				sceneCenter.y=pSimulator.height/2;
+				sceneCenter.z=0;
+				eyePosition.z=gameWorld.southernBoundary();
+				eyePosition.x=sceneCenter.x;
+				eyePosition.y=sceneCenter.y-50;
+				viewOrigin=new PVector(eyePosition.x, gameWorld.origin.y, eyePosition.z-viewRadius);
+			}
+		}
+
+
+
+		/* a class that represents a GameWorld. if we decide to have extra stages we should create additional game world objects (they function like levels)*/
+		class GameWorld {
+			Box box;
+			PVector origin, quaternion=new PVector();
+			GameObjectMap gameObjectMap;
+
+
+
+
+			GameWorld(PVector origin, int width, int height, int length) {
+				this.origin=origin;
+				box=new Box(origin.get(), width, height, length);
+				gameObjectMap=new GameObjectMap(new PVector(), new PVector(width, length), origin.x, origin.z);
+				turn(new PVector(0, pSimulator.TWO_PI, 0));
+				layoutReader.populateMap(gameObjectMap, layoutReader.layout1, this);
+			}
+
+			float getAngle() {
+				return quaternion.y;
+			}
+
+
+			/* returns true if the gameObject is within the boundaries of the ground plane*/
+			boolean inView(OverworldObject gameObject) {
+				return box.isInside(gameObject);
+			}
+
+			float northernBoundary() {
+				return box.northernBoundary;
+			}
+
+			PVector dimensions() {
+				return box.dimensions;
+			}
+
+			float easternBoundary() {
+				return box.easternBoundary;
+			}
+
+
+			float westernBoundary() {
+				return box.westernBoundary;
+			}
+
+			float southernBoundary() {
+				return box.southernBoundary;
+			}
+
+			void mapTextures(Texture north, Texture south, Texture east, Texture west, Texture bottom) {
+				box.mapTextures(north, south, east, west, bottom);
+			}
+
+
+			void draw() {
+				pSimulator.pushMatrix();
+				pSimulator.translate(origin);
+				pSimulator.rotate(quaternion);
+				box.draw();
+				gameObjectMap.draw();    
+				pSimulator.popMatrix();
+			}
+
+			void turn(PVector heading) {
+				quaternion.add(heading);
+			}
+
+			void move(PVector translation) {
+				gameObjectMap.move(translation);
+			}
+		}
+
+
+		class GameObjectMap {
+			ArrayList<OverworldObject> gameObjects=new ArrayList<OverworldObject>();
+			PVector origin, dim;
+			PVector absoluteTranslation; //sum of the translations from upper left corner of all the object's enclosing objects (i.e., the gameworld and the moveable npc map). for use in the collision checks.
+
+
+
+			GameObjectMap(PVector origin, PVector dim, float parentTranslationX, float parentTranslationZ) {
+				this.origin=origin;
+				this.dim=dim;
+				absoluteTranslation=origin.get();
+				absoluteTranslation.x+=parentTranslationX;
+				absoluteTranslation.z+=parentTranslationZ;
+			}
+
+			void addGameObject(OverworldObject gameObject) {
+				gameObjects.add(gameObject);
+			}
+
+
+
+			void move(PVector translation) {
+				origin.add(translation);
+				absoluteTranslation.add(translation);
+			}
+
+
+			void update() {
+				draw();
+			}
+
+			void draw() {
+				pSimulator.pushMatrix();
+				pSimulator.translate(origin);
+				updateGameObjects();
+				pSimulator.popMatrix();
+			}
+
+
+			void updateGameObjects() {
+				GameObject gameObject;
+				for (int i=0; i<gameObjects.size(); i++) {
+					gameObject = gameObjects.get(i);
+					if (gameWorld.inView(gameObject)) {
+						gameObject.turnTowards(-gameWorld.quaternion.y);
+						gameObject.update();
+						gameObject.updatePerceivedTranslation(absoluteTranslation.x, absoluteTranslation.z);
+						if (collisionChecker.collidedWithCamera(gameObject)) {
+							gameObject.handleCollisionWithPlayer();
+							gameObjects.remove(gameObject);
+						}
+					}
+				}
+			}
+		}
+
+
+
+
+		class EnergyBar {
+			float MAX_ENERGY=1.0f;
+			float currEnergy=MAX_ENERGY;
+			float currWidth;
+			PVector pos, dim;
+
+			EnergyBar(PVector pos, PVector dim) {
+				this.pos=pos;
+				this.dim=dim;
+				currWidth=dim.x;
+			}
+
+			boolean empty() {
+				return currEnergy==0;
+			}
+
+			void deplete(float amount) {
+				currEnergy=pSimulator.max(0, currEnergy-amount);
+				currWidth=dim.x*currEnergy;
+			}
+
+			void replete(float amount) {
+				currEnergy=pSimulator.min(MAX_ENERGY, currEnergy+amount);
+				currWidth=dim.x*currEnergy;
+			}
+
+
+			void draw() {
+				pSimulator.pushMatrix();
+				pSimulator.pushStyle();
+				pSimulator.translate(pos);
+				pSimulator.noStroke();
+
+				pSimulator.fill(96, 245, 124);
+				pSimulator.rect(-dim.x/2, -dim.y/2, currWidth, dim.y);
+				pSimulator.fill(255);
+				pSimulator.rect(-dim.x/2, -dim.y/2, currWidth, 10);
+				pSimulator.textSize(20);
+				pSimulator.textAlign(LEFT);
+				pSimulator.text("Energy", -dim.x/2, dim.y+5);
+				pSimulator.popStyle();
+				pSimulator.popMatrix();
+			}
+		}
+
+
+
+		class LayoutReader {
+			final int MAX_OBJECT_TRIGGER_RADIUS=80;
+
+			ObjectGenerator EMPTY=null;
+
+
+			ObjectGenerator[][] layout1=new ObjectGenerator[][]{
+				{EMPTY, EMPTY, EMPTY, EMPTY, JEWEL}, 
+				{EMPTY, EMPTY, JEWEL, JEWEL, EMPTY}, 
+				{EMPTY, EMPTY, JEWEL, FOOD, EMPTY}, 
+				{EMPTY, JEWEL, EMPTY, EMPTY, EMPTY}, 
+				{JEWEL, CONCERN, EMPTY, EMPTY, EMPTY}, 
+				{EMPTY, JEWEL, CONCERN, EMPTY, EMPTY}, 
+				{EMPTY, FOOD, JEWEL, CONCERN, EMPTY}, 
+			};
+
+			/* if you want to access the array indices for a given gameobject position, you will need to use the game object's absolute position
+     (the one we use to check for collisions). we don't need to take the rotation into account. however, you will eed to take the rotation into account when
+     ascertaining whether or not the object appears "offscreen")*/
+
+			void populateMap(GameObjectMap map, ObjectGenerator[][] layout, GameWorld gameWorld) {
+				float tileHeight=map.dim.y/layout.length;
+				float tileWidth=map.dim.x/layout[0].length;
+				float x;
+				float z;
+				for (int i=0; i<layout.length; i++) {
+					for (int j=0; j<layout[0].length; j++) {
+						x=tileWidth/2+(tileWidth*j);
+						z=-map.dim.y/2+tileHeight/2+(tileHeight*i);
+						ObjectGenerator type=layout[i][j];
+						if (!(type==EMPTY)) {
+							GameObject ob= type.generate(new PVector(x-map.absoluteTranslation.x, 0, z-map.absoluteTranslation.z), new PVector(min(50, tileWidth), min(100, tileHeight)), map.absoluteTranslation.x, map.absoluteTranslation.z, min(MAX_OBJECT_TRIGGER_RADIUS, min(tileWidth/2, tileHeight/2)), new PVector(0, -gameWorld.quaternion.y, 0));
+							map.addGameObject(ob);
+						}
+					}
+				}
+			}
+		}
+
+
+
+		class Box {
+
+			ArrayList<Wall> walls=new ArrayList<Wall>();
+			Wall north, south, east, west, bottom;
+			PVector origin, dimensions;
+			float northernBoundary, southernBoundary, easternBoundary, westernBoundary;
+
+
+			Box(PVector origin, int width, int height, int length) {
+				this.origin=origin;
+				dimensions=new PVector(width, height, length);
+				northernBoundary=origin.z-length/2;
+				southernBoundary=origin.z+length/2;
+				easternBoundary=origin.x+width/2;
+				westernBoundary=origin.x-width/2;
+
+
+				bottom=new Wall(new PVector(), new PVector(width, length), new PVector(PI/2, 0, 0));
+				north=new Wall(new PVector(0, -height/2, -length/2), new PVector(width, height), new PVector());
+				south=new Wall(new PVector(0, -height/2, length/2), new PVector(width, height), new PVector());
+				east=new Wall(new PVector(-width/2, -height/2, 0), new PVector(length, height), new PVector(0, PI/2, 0));
+				west=new Wall(new PVector(width/2, -height/2, 0), new PVector(length, height), new PVector(0, PI/2, 0));
+				walls.add(bottom);
+				walls.add(north);
+				walls.add(south);
+				walls.add(east);
+				walls.add(west);
+			}
+
+			void mapTextures(Texture north, Texture south, Texture east, Texture west, Texture bottom) {
+				this.north.setTexture(north);
+				this.south.setTexture(south);
+				this.west.setTexture(west);
+				this.east.setTexture(east);
+				this.bottom.setTexture(bottom);
+			}
+
+			boolean isInside(OverworldObject gameObject) {
+
+				return pSimulator.abs(gameObject.absoluteTranslation.x-origin.x)<dimensions.x&&abs(gameObject.absoluteTranslation.z-origin.z)<dimensions.z;
+			}
+
+
+			void draw() {
+				for (Wall wall : walls)
+					wall.draw();
+			}
+		}
+
+
+		class Wall {
+			PVector origin, dimension, quaternion;
+			Texture texture;
+
+
+			Wall(PVector origin, PVector dimension, PVector quaternion) {
+				this.origin=origin;
+				this.dimension=dimension;
+				this.quaternion=quaternion;
+			}
+
+
+
+			void setTexture(Texture texture) {
+				if (texture!=null) {
+					texture.resize((int)dimension.x, (int)dimension.y);
+					this.texture=texture;
+				}
+			}
+
+
+			void draw() {
+				pSimulator.pushMatrix();
+				pSimulator.translate(origin);
+				pSimulator.rotate(quaternion);
+				if (texture!=null) texture.apply();
+				pSimulator.popMatrix();
+			}
+		}
+	}
+
+}

@@ -1,0 +1,17 @@
+package ocdSim;
+
+public class ColorTexture extends Texture {
+
+	@Override
+	public void apply() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

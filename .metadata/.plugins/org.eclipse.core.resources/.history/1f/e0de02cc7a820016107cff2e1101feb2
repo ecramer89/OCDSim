@@ -1,0 +1,17 @@
+package ocdSim;
+
+public class ImageTexture extends Texture {
+
+	@Override
+	public void apply() {
+		 image(img, -img.width/2, -img.height/2);
+
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		img.resize(width, height);
+
+	}
+
+}

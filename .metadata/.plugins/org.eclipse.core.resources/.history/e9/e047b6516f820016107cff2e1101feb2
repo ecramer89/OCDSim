@@ -1,0 +1,76 @@
+package ocdSim;
+
+/*a class that represents an object that can appear in the overworld.*/
+public class OverworldObject extends PComponent {
+
+	PVector pos, dim;
+	  float checkRadius;
+	  PVector absoluteTranslation; //sum of the translations from upper left corner of all the object's enclosing objects (i.e., the gameworld and the moveable npc map). for use in the collision checks.
+
+	  /* variables controlling the rotation parameters of the gameobjects. gameobjects have the ability to turn towards a target*/
+	  PVector quaternion;
+	  float targetAngleY;
+	  float dAngleY=radians(1);
+	  float yAngleGive=radians(1);
+
+	  GameObject(PVector pos, PVector dim, float parentTranslationX, float parentTranslationZ, float checkRadius, PVector quaternion) {
+	    this.pos=pos;
+	    this.dim=dim;
+	    this.checkRadius=checkRadius;
+	    absoluteTranslation=pos.get();
+	    this.quaternion=quaternion;
+	    updatePerceivedTranslation(parentTranslationX, parentTranslationZ);
+	  }
+
+	  PVector absoluteTranslation() {
+	    return absoluteTranslation;
+	  }
+
+	  void turnTowards(float angle) {
+	    targetAngleY=angle;
+	  }
+
+	  /* GameObjects only exist within the game world*/
+	  void handleCollisionWithPlayer() {
+	  }
+
+	  void updatePerceivedTranslation(float parentTranslationX, float parentTranslationZ) {
+	    absoluteTranslation.x=pos.x+parentTranslationX;
+	    absoluteTranslation.z=pos.z+parentTranslationZ;
+	  }
+
+	  float checkRadius() {
+	    return checkRadius;
+	  }
+
+
+	  void render() {
+	  }
+
+	  void update() {
+	    turnTowardsTarget();
+	    draw();
+	  }
+
+
+	  void turnTowardsTarget() {
+	    if (abs(targetAngleY-quaternion.y)>yAngleGive) {
+	      if (targetAngleY>quaternion.y) {
+	        dAngleY=abs(dAngleY);
+	      } else {
+	        dAngleY=-abs(dAngleY);
+	      }
+	      quaternion.y+=dAngleY;
+	    }
+	  }
+
+	  void draw() {
+	    pushMatrix();
+	    pushStyle();
+	    translate(pos);
+	    rotate(quaternion);
+	    render();
+	    popStyle();
+	    popMatrix();
+	  }
+}

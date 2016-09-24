@@ -1,0 +1,25 @@
+package ocdSim;
+
+public class OverworldFood extends OverworldObject {
+
+
+	  private FoodObjectData data;
+	  
+	  
+	@Override
+	public void handleCollisionWithPlayer() {
+		 pSimulator.modeTransitioner().encounteredFood(this);
+
+	}
+	
+	public FoodObjectData getFoodData() {
+	    return data;
+	  }
+
+	@Override
+	protected void render() {
+		image(data.getImage(), -dim.x/2, -dim.y*2);
+
+	}
+
+}

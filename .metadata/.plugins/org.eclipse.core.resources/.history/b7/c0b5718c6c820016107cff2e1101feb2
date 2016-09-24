@@ -1,0 +1,6 @@
+package ocdSim;
+
+public class PComponent {
+
+	protected static PApplet pApplet;
+}

@@ -1,0 +1,47 @@
+package ocdSim;
+import processing.core.*;
+import java.util.*;
+
+public enum FoodType {
+	
+	ArrayList<Concern> concerns=new ArrayList<Concern>(); //the concerns that apply to this type of food
+	  String label; //the label for this type of food
+	  String requestToEat; //each food can remember a special message requesting the player to eat it
+	  PImage img; //this food's image
+	  float energyProvided; //the amount of energy this food provides if it's eaten
+
+
+	  private FoodType(PImage img, String label, String requestToEat) {
+	    this.img=img;
+	    this.label=label;
+	    this.requestToEat=requestToEat;
+	  }
+
+	  String getLabel() {
+	    return label;
+	  }
+
+	  PImage getImage() {
+	    return img;
+	  }
+
+	  void addConcern(Concern concern) {
+	    concerns.add(concern);
+	  }
+
+	  ArrayList<Concern> getConcerns() {
+	    return concerns;
+	  }
+
+	  void setEnergy(float energy) {
+	    this.energyProvided=energy;
+	  }
+	  float getEnergy() {
+	    return energyProvided;
+	  }
+
+	  String getRequestToEat() {
+	    return requestToEat;
+	  }
+
+}

@@ -1,0 +1,446 @@
+interface MouseListener {
+
+  public void handleMousePressed();
+  public void handleMouseReleased();
+}
+
+class Interface implements GameMode {
+  Frame current;
+  FoodEncounter foodEncounter;
+  EventEncounter eventEncounter;
+
+  Interface() {
+    foodEncounter=new FoodEncounter();
+    eventEncounter=new EventEncounter();
+  }
+
+  void newFoodEncounter(FoodObjectData food) {
+    current=foodEncounter;
+    foodEncounter.prepare(food);
+  }
+
+  void newEventEncounter(ConcernEvent concern) {
+    current=eventEncounter;
+    eventEncounter.prepare(concern);
+  }
+
+  void run() {
+    current.update();
+  }
+
+
+  void handleMousePressed() {
+    current.notifyMouseListeners(true);
+  }
+
+  void handleMouseReleased() {
+    current.notifyMouseListeners(false);
+  }
+
+  void handleKeyPressed() {
+  }
+  void handleKeyReleased() {
+  }
+}
+
+
+class Component {
+  Container container;
+  PVector pos, dim;
+  color fill=color(120);
+  float rounding=30;
+
+
+  public Component() {
+    pos=new PVector();
+    dim=new PVector(100, 100);
+  }
+
+
+  public Component(Container container) {
+    this();
+    this.container=container;
+  }
+
+  public void setDimensions(float x, float y) {
+    dim.x=x;
+    dim.y=y;
+  }
+
+  public void setPosition(float x, float y) {
+    pos.x=x;
+    pos.y=y;
+  }
+
+  public void setBackground(color fill) {
+    this.fill=fill;
+  }
+
+
+  public void update() {
+  }
+}
+
+
+class Container extends Component {
+  ArrayList<MouseListener> mouseListeners=new ArrayList<MouseListener>();
+  ArrayList<Component> children=new ArrayList<Component>();
+
+  public Container(Container container) {
+    super(container);
+  }
+
+  public Container() {
+  }
+
+  public void add(Component child) {
+    children.add(child);
+  }
+
+  public void addMouseListener(MouseListener listener) {
+    mouseListeners.add(listener);
+  }
+
+  public void notifyMouseListeners(boolean pressed) {
+    for (MouseListener listener : mouseListeners) {
+      if (pressed) listener.handleMousePressed();
+      else listener.handleMouseReleased();
+    }
+  }
+
+  public void update() {
+    updateComponent();
+    updateChildren();
+  }
+
+  void updateChildren() {
+    for (Component component : children) {
+      component.update();
+    }
+  }
+
+  //write code to render self here
+  void updateComponent() {
+  }
+}
+
+
+
+//a top level container.
+//the children of a top level container must be panels.
+class Frame extends Container {
+
+  //only one panel (screen) can be active at a given time.
+  Panel active;
+
+  public Frame() {
+  }
+
+  /* this is breaking substitutability */
+  public void add(Component component) {
+    if (component instanceof Panel) {
+      super.add(component);
+    }
+  }
+
+  public void notifyMouseListeners(boolean pressed) {
+    active.notifyMouseListeners(pressed);
+  }
+
+  void updateComponent() {
+    camera();
+    background(fill);
+  }
+}
+
+
+
+class FoodEncounter extends Frame {
+
+  FoodObjectData food;
+  YesNoCheck yesNoCheck;
+  CheckOptions checkOptions;
+
+  FoodEncounter() {
+    yesNoCheck=new YesNoCheck(this);
+    checkOptions=new CheckOptions(this);
+    add(yesNoCheck);
+    add(checkOptions);
+  }
+
+
+  void prepare(FoodObjectData food) {
+    this.food=food;
+    yesNoCheck.prepare(food);
+    checkOptions.prepare(food);
+    active=yesNoCheck;
+  }
+}
+
+class EventEncounter extends Frame {
+
+  void prepare(ConcernEvent event) {
+  }
+}
+
+
+class Panel extends Container {
+
+  public Panel(Container container) {
+    super(container);
+  }
+}
+
+
+class YesNoCheck extends Panel {
+
+  Button yes, no, check;
+  TextBox message;
+  Image foodImg;
+
+  public YesNoCheck(Container container) {
+    super(container);
+    setBackground(0);
+    setDimensions(width/2, height/2);
+    setPosition(width/2, height/2);
+    int buttonWidth=100;
+    int buttonHeight=80;
+    yes=new Button(this);
+    yes.setDimensions(buttonWidth, buttonHeight);
+    yes.setPosition(pos.x-dim.x/2+buttonWidth, pos.y+dim.y/2-buttonHeight);
+    yes.setText("Yes");
+    no=new Button(this);
+    no.setDimensions(buttonWidth, buttonHeight);
+    no.setPosition(pos.x+dim.x/2-buttonWidth, pos.y+dim.y/2-buttonHeight);
+    no.setText("No");
+    check=new Button(this);
+    check.setDimensions(buttonWidth, buttonHeight);
+    check.setPosition(pos.x-dim.x/2+buttonWidth*2.5, pos.y+dim.y/2-buttonHeight);
+    check.setText("Check");
+    foodImg=new Image();
+    foodImg.setDimensions(dim.x/10, dim.y/10);
+    foodImg.setPosition(pos.x, pos.y);
+
+    message=new TextBox();
+    message.setPosition(pos.x, pos.y-dim.y/4);
+    message.setDimensions(dim.x/3, dim.y/3);
+    message.setBackground(0);
+    message.setTextColor(color(255));
+    
+    add(yes);
+    add(no);
+    add(check);
+    add(foodImg);
+    add(message);
+  }
+
+
+  void prepare(FoodObjectData food) {
+    foodImg.setImage(food.getImage());
+    message.setText(food.getRequestToEat());
+  }
+}
+
+
+class CheckOptions extends Panel {
+
+  ArrayList<Button> checkOptions;
+  Button currOption;
+  int idxOfCurrOption;
+
+
+
+  public CheckOptions(Container container) {
+    super(container);
+  }
+
+  public void prepare(FoodObjectData food) {
+    //prepare the screens
+  }
+}
+
+class TextBox extends Component {
+ 
+  String text="";
+  color textColor;
+  int textSize=20;
+
+  void setText(String text) {
+    this.text=text;
+    
+  }
+  
+  void setTextColor(color textColor){
+    this.textColor=textColor;
+  }
+
+
+  void update() {
+    pushMatrix();
+    translate(pos);
+    pushStyle();
+    fill(fill);
+    rect(-dim.x/2, -dim.y/2, dim.x, dim.y);
+    textSize(textSize);
+    fill(textColor);
+    textAlign(CENTER);
+    text(text, -dim.x/2, -dim.y/2, dim.x, dim.y);
+    popStyle();
+    popMatrix();
+  }
+}
+
+class Image extends Component {
+  PImage img;
+
+  void setImage(PImage img) {
+    this.img=img;
+  }
+
+  void update() {
+    pushMatrix();
+    translate(pos);
+    if (img!=null) {
+      image(img, -dim.x/2, -dim.y/2);
+    }
+    popMatrix();
+  }
+}
+
+
+//a buttton is a component that reacts to mouse events. It can display a text message or an image.
+//by default, if more than one label or image is specified, it will react to being pressed by updating to the next label or image.
+//one can also specify one or more strategies to be invoked when the button is pressed. Only one strategy is invoked on each successive press.
+class Button extends Component implements MouseListener {
+  
+  
+  TextBox currLabel;
+  ArrayList<String> labelStates=new ArrayList<String>();
+  int currLabelIdx;
+
+  ArrayList<Strategy> strategies=new ArrayList<Strategy>();
+  int stratDelayTime=60;
+  int stratDelayTimer;
+  int currStratIdx;
+
+  ArrayList<PImage> imageStates=new ArrayList<PImage>();
+  int currImageIdx;
+  PImage currImage;
+
+  int clickBufferTime=30;
+  int clickBufferTimer;
+
+
+  Button(Container container) {
+    super(container);
+    container.addMouseListener(this);
+    currLabel=new TextBox();
+  }
+
+
+  /*use this if the buttonly only has one message it should display*/
+  void setText(String text) {
+    
+    currLabel.setText(text);
+  }
+
+  /*use this if there is only one image you want the button to show*/
+  void setImage(PImage img) {
+    this.currImage=img;
+  }
+
+  /*use this if you want the button to be able to click through multiple texts*/
+  void addText(String text) {
+    labelStates.add(text);
+  }
+
+  /*use this if you want the button to be able to click through multiple images*/
+  void addImage(PImage img) {
+    imageStates.add(img);
+  }
+
+  void clearText() {
+    currLabel.setText("");
+    labelStates=new ArrayList<String>();
+  }
+
+
+  void clearImages() {
+    currImage=null;
+    imageStates=new ArrayList<PImage>();
+  }
+
+  public void handleMousePressed() {
+    if (clickBufferTimer==0) {
+      nextLabel();
+      nextImage();
+      invokeNextStrategyAfterDelay();
+      clickBufferTimer=clickBufferTime;
+    }
+  }
+
+  void invokeNextStrategyAfterDelay() {
+    stratDelayTimer=stratDelayTime;
+    clickBufferTimer=clickBufferTime;
+  }
+
+  void nextLabel() {
+    if (labelStates.size()>0) {
+      if (currLabelIdx<labelStates.size()-1) {
+        currLabelIdx++;
+      } else currLabelIdx=0;
+      currLabel.setText(labelStates.get(currLabelIdx));
+    }
+  }
+
+  void nextImage() {
+    if (imageStates.size()>0) {
+      if (currImageIdx<imageStates.size()-1) {
+        currImageIdx++;
+      } else currImageIdx=0;
+      currImage=imageStates.get(currImageIdx);
+    }
+  }
+
+
+
+  public void update() {
+   currLabel.update();
+   //also refactor so that it uses the Image Box class.
+  
+    updateTimers();
+  }
+
+
+  void updateTimers() {
+    if (clickBufferTimer>0) {
+      clickBufferTimer--;
+    }
+    
+    if (strategies.size()>0) {
+      if (stratDelayTimer>0) {
+        stratDelayTimer--;
+        if (stratDelayTimer==0) {
+          if (currStratIdx<strategies.size()-1) {
+            currStratIdx++;
+          }
+          strategies.get(currStratIdx).invoke(this);
+          stratDelayTimer=stratDelayTime;
+        }
+      }
+    }
+  }
+
+
+
+
+  public void handleMouseReleased() {
+  }
+}
+
+
+class Strategy {
+
+  public void invoke(Object arg) {
+  }
+}

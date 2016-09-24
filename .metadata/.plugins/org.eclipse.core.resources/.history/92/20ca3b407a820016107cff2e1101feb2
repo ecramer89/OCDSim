@@ -1,0 +1,7 @@
+package ocdSim;
+
+public abstract class Texture extends PComponent {
+	 public abstract void apply();
+
+	  void resize(int width, int height);
+}
