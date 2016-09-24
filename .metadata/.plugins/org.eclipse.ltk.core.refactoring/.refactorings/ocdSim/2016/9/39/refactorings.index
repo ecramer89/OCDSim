@@ -14,3 +14,12 @@
 1474742253184	Delete element
 1474742372555	Delete element
 1474742441642	Delete element
+1474756902912	Rename field 'events'
+1474757081540	Encapsulate field 'concernManager'
+1474757563095	Encapsulate field 'assetManager'
+1474757604252	Encapsulate field 'gameParameters'
+1474757625728	Encapsulate field 'foodTypeManager'
+1474758380213	Delete element
+1474758391056	Delete element
+1474758397644	Delete element
+1474758404885	Delete element

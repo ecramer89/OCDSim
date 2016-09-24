@@ -1,0 +1,13 @@
+package ocdSim;
+
+public class ConcernEventManager {
+
+	
+	
+	public static ConcernEvent getNextConcernEvent() {
+
+		if (currConcernEvent<events.size()-1) currConcernEvent++;
+		return events.get(currConcernEvent);
+	}
+
+}

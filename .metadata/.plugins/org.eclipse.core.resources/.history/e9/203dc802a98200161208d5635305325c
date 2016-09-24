@@ -1,0 +1,15 @@
+package ocdSim;
+
+public class AssetManager extends PComponent {
+
+	
+	
+	public AssetManager(){
+		sky=color(255);
+		horizon=new ImageTexture(loadImage("C:/Users/root960/OCDSim/ocdSim/data/images/bg.tif"));
+		ground=new ColorTexture(color(96, 165, 7));
+		EMPTY_IMAGE=loadImage("C:/Users/root960/OCDSim/ocdSim/data/images/empty.png");
+		
+	
+	}
+}

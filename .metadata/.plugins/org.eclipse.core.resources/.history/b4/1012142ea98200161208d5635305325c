@@ -1,0 +1,6 @@
+package ocdSim;
+
+public class GameParameters {
+
+	private static int jewelsCollected;
+}

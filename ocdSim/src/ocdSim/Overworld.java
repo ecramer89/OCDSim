@@ -24,7 +24,7 @@ public class Overworld extends PComponent implements GameMode{
 
 			layoutReader=new LayoutReader();
 			gameWorld=new GameWorld(new PVector(pSimulator.width/2, pSimulator.height/2), pSimulator.width, pSimulator.height, pSimulator.height*2);
-			gameWorld.mapTextures(null, null, null, null, pSimulator.getGround());
+			gameWorld.mapTextures(null, null, null, null, pSimulator.getAssetManager().getGround());
 			cameraController=new CameraController();
 			inputHandler=new NavigationInputHandler();
 			collisionChecker=new CollisionChecker(cameraController);
@@ -61,7 +61,7 @@ public class Overworld extends PComponent implements GameMode{
 			pSimulator.translate(pSimulator.width-200, 80);
 			pSimulator.fill(255);
 			pSimulator.textSize(30);
-			pSimulator.text("Jewels:  "+pSimulator.getJewelsCollected(), 0, 0);
+			pSimulator.text("Jewels:  "+pSimulator.getGameParameters().getJewelsCollected(), 0, 0);
 			pSimulator.popMatrix();
 			pSimulator.popStyle();
 		}
@@ -503,13 +503,13 @@ public class Overworld extends PComponent implements GameMode{
 		class LayoutReader {
 			final int MAX_OBJECT_TRIGGER_RADIUS=80;
 
-			private OverworldObjectFactory EMPTY=null;
-			private OverworldTriggerFactory CONCERN=new OverworldTriggerFactory();
-			private OverworldJewelFactory JEWEL=new OverworldJewelFactory();
-			private OverworldFoodFactory FOOD=new OverworldFoodFactory();
+			private OverworldObject EMPTY=null;
+			private OverworldTrigger CONCERN=new OverworldTrigger();
+			private OverworldJewel JEWEL=new OverworldJewel();
+			private OverworldFood FOOD=new OverworldFood();
 
 
-			OverworldObjectFactory[][] layout1=new OverworldObjectFactory[][]{
+			OverworldObject[][] layout1=new OverworldObject[][]{
 				{EMPTY, EMPTY, EMPTY, EMPTY, JEWEL}, 
 				{EMPTY, EMPTY, JEWEL, JEWEL, EMPTY}, 
 				{EMPTY, EMPTY, JEWEL, FOOD, EMPTY}, 
@@ -523,7 +523,7 @@ public class Overworld extends PComponent implements GameMode{
      (the one we use to check for collisions). we don't need to take the rotation into account. however, you will eed to take the rotation into account when
      ascertaining whether or not the object appears "offscreen")*/
 
-			void populateMap(GameObjectMap map, OverworldObjectFactory[][] layout, GameWorld gameWorld) {
+			void populateMap(GameObjectMap map, OverworldObject[][] layout, GameWorld gameWorld) {
 				float tileHeight=map.dim.y/layout.length;
 				float tileWidth=map.dim.x/layout[0].length;
 				float x;
@@ -532,7 +532,7 @@ public class Overworld extends PComponent implements GameMode{
 					for (int j=0; j<layout[0].length; j++) {
 						x=tileWidth/2+(tileWidth*j);
 						z=-map.dim.y/2+tileHeight/2+(tileHeight*i);
-						OverworldObjectFactory type=layout[i][j];
+						OverworldObject type=layout[i][j];
 						if (!(type==EMPTY)) {
 							OverworldObject ob= type.generate(new PVector(x-map.absoluteTranslation.x, 0, z-map.absoluteTranslation.z), new PVector(pSimulator.min(50, tileWidth), pSimulator.min(100, tileHeight)), map.absoluteTranslation.x, map.absoluteTranslation.z, pSimulator.min(MAX_OBJECT_TRIGGER_RADIUS, pSimulator.min(tileWidth/2, tileHeight/2)), new PVector(0, -gameWorld.quaternion.y, 0));
 							map.addGameObject(ob);

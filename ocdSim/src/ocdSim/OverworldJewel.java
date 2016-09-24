@@ -15,6 +15,11 @@ public class OverworldJewel extends OverworldObject {
 	}
 
 
+	public OverworldJewel() {
+		super();
+	}
+
+
 	@Override
 	public void update() {
 		super.update();
@@ -24,7 +29,7 @@ public class OverworldJewel extends OverworldObject {
 
 	@Override
 	public void handleCollisionWithPlayer() {
-		OCDSimulator.updateJewelsCollected(1);
+		pSimulator.getGameParameters().updateJewelsCollected(1);
 
 	}
 
@@ -40,5 +45,15 @@ public class OverworldJewel extends OverworldObject {
 		}
 
 	}
+
+
+	@Override
+	public OverworldObject generate(PVector pos, PVector dim, float parentTranslationX, float parentTranslationZ,
+			float checkRadius, PVector quaternion) {
+			dim.y=dim.x;
+		    return new OverworldJewel(pos, dim, parentTranslationX, parentTranslationZ, checkRadius, quaternion);
+
+	}
+
 
 }

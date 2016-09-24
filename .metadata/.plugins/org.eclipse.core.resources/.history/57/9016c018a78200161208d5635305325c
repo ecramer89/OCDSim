@@ -1,0 +1,18 @@
+package ocdSim;
+
+public class ConcernManager {
+	private static Concern ORGANIC;
+	private static Concern BPA;
+	private static Concern HOT;
+	private static Concern UNFILTERED;
+	private static Concern MOULDY; 
+
+	
+	
+	
+	
+	
+	public void initializeConcerns(){
+		
+	}
+}
