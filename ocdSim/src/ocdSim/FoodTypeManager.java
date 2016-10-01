@@ -2,7 +2,7 @@ package ocdSim;
 
 import java.util.ArrayList;
 
-public class FoodTypeManager extends PComponent {
+public class FoodTypeManager extends OCDSimComponent {
 	
 	private static ArrayList<FoodType> foodTypes=new ArrayList<FoodType>();
 	

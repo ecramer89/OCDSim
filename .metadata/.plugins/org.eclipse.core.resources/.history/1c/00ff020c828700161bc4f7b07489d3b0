@@ -1,0 +1,13 @@
+package interactiveWindow;
+import processing.core.*;
+
+public class Image extends PanelComponent {
+
+	@Override
+	public void drawComponent(PApplet pApplet) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+}

@@ -1,0 +1,5 @@
+package interactiveWindow;
+
+public class TextBox extends PanelComponent{
+
+}

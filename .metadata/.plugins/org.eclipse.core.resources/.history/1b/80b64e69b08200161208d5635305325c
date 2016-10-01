@@ -1,0 +1,13 @@
+package interactiveWindow;
+import java.util.*;
+
+/* a class that represents the top level container of an interactive 2d window*/
+public class Window {
+	
+	private ArrayList<Panel> panel;
+	private Panel activePanel;
+	
+	
+
+	
+}

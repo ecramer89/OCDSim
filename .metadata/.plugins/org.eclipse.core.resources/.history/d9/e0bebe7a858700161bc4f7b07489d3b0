@@ -1,0 +1,9 @@
+package interactiveWindow;
+
+public class Timer {
+	
+	private TimerListener listener;
+	private int maxTicks;
+	private int currTicks;
+
+}

@@ -29,7 +29,7 @@ public class OCDSimulator extends PApplet {
 
 	public void settings(){
 		size(displayWidth, displayHeight,P3D);
-		PComponent.setPApplet(this);
+		OCDSimComponent.setPApplet(this);
 
 	}
 

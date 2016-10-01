@@ -1,0 +1,7 @@
+package interactiveWindow;
+import processing.core.*;
+
+public class Image extends WindowComponent {
+	
+
+}

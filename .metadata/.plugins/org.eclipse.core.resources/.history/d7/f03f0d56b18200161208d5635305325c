@@ -1,0 +1,8 @@
+package interactiveWindow;
+
+public interface MouseListener {
+	
+	public abstract void mousePressed(int mouseX, int mouseY);
+	public abstract void mouseReleased(int mouseX, int mouseY);
+	
+}

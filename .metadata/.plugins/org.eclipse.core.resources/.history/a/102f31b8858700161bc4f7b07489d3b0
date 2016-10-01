@@ -1,0 +1,23 @@
+package interactiveWindow;
+
+import processing.core.PApplet;
+
+public class Timer {
+	
+	private TimerListener listener;
+	private int maxTicks;
+	private int currTicks;
+	private int framesPerTick;
+	
+	
+	public Timer(TimerListener listener, int maxTicks){
+		this.maxTicks=maxTicks;
+		this.listener=listener;
+		framesPerTick=1;
+	}
+	
+	public void update(PApplet pApplet){
+		
+	}
+
+}

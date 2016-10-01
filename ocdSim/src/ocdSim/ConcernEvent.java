@@ -2,7 +2,7 @@ package ocdSim;
 import processing.core.*;
 import java.util.*;
 
-public class ConcernEvent extends PComponent {
+public class ConcernEvent extends OCDSimComponent {
 	private ArrayList<PImage> screens;
 	private ArrayList<String> messages;
 	private int currMessage=-1;

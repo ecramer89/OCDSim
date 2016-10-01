@@ -4,7 +4,7 @@ import java.util.*;
 
 
 /*a class that represents an object that can appear in the overworld.*/
-public abstract class OverworldObject extends PComponent {
+public abstract class OverworldObject extends OCDSimComponent {
 
 	protected PVector pos, dim;
 	protected  float checkRadius;

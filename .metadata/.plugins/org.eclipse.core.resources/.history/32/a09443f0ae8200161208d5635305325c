@@ -1,0 +1,7 @@
+package interactiveWindow;
+
+
+/* a class that represents the top level container of an interactive 2d window*/
+public class Window2D {
+
+}

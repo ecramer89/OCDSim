@@ -1,0 +1,43 @@
+package interactiveWindow;
+
+import processing.core.PApplet;
+
+public class TextBox extends PanelComponent{
+	
+	private int textColor;
+	private int textSize;
+	private String text;
+
+	@Override
+	public void drawComponent(PApplet pApplet) {
+		pApplet.pushStyle();
+		pApplet.pushMatrix();
+		pApplet.translate(x, y);
+		pApplet.textSize(textSize);
+		pApplet.fill(textColor);
+		pApplet.text(text, -width/2, -height/2, width, height);
+		pApplet.popMatrix();
+		pApplet.popStyle();
+	}
+
+
+
+	public int getColor() {
+		// TODO Auto-generated method stub
+		return textColor;
+	}
+
+	public void setTextColor(int textColor) {
+		// TODO Auto-generated method stub
+		this.textColor=textColor;
+		
+	}
+
+	public void setText(String text) {
+		// TODO Auto-generated method stub
+		this.text=text;
+		
+	}
+
+
+}

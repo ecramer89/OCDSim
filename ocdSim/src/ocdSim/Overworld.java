@@ -1,7 +1,7 @@
 package ocdSim;
 import processing.core.*;
 import java.util.*;
-public class Overworld extends PComponent implements GameMode{
+public class Overworld extends OCDSimComponent implements GameMode{
 
 		public static final int RESET_QUIT_DELAY=90;
 		private GameWorld gameWorld;

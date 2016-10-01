@@ -2,7 +2,7 @@ package ocdSim;
 
 import processing.core.PImage;
 
-public class AssetManager extends PComponent {
+public class AssetManager extends OCDSimComponent {
 
 	private static int sky;
 	private static ColorTexture ground;

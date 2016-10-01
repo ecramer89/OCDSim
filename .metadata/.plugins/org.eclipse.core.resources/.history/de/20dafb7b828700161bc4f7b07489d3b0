@@ -1,0 +1,76 @@
+package interactiveWindow;
+import java.util.*;
+
+import processing.core.*;
+
+public class Button extends PanelComponent implements MouseListener{
+
+	
+	//a two dimensional array. Specify Messages (function) to be invoked in paralell or sequentially for
+	//each successive button press.
+	private Message[][] messages;
+	private int currMessageIndex;
+	
+	private ButtonState[] buttonStates;
+	private ButtonState currentState;
+	private int currStateIndex;
+	
+	
+	
+	@Override
+	public void handleMousePressed(int mouseX, int mouseY) {
+		if(isUnderMouse(mouseX, mouseY)){
+          changeState();
+          sendMessages();
+		}
+
+	}
+	
+	private void changeState(){
+		if(currStateIndex<buttonStates.length-1){
+			currStateIndex++;
+		}
+		else currStateIndex=0;
+		
+		this.currentState=buttonStates[currStateIndex];
+			
+	}
+	
+	private void sendMessages(){
+		if(currMessageIndex<messages.length-1){
+			currMessageIndex++;
+		}
+		else currMessageIndex=0;
+		
+		Message[] messageSet=messages[currMessageIndex];
+		for(int i=0; i< messages.length; i++){
+			Message m = messageSet[i];
+			m.send();
+		}
+		
+	}
+	
+	@Override
+	public boolean isUnderMouse(int mouseX, int mouseY) {
+		// TODO Auto-generated method stub
+		return super.pointIn(mouseX, mouseY);
+	}
+
+	@Override
+	public void handleMouseReleased(int mouseX, int mouseY) {
+
+	}
+
+	@Override
+	public void drawComponent(PApplet pApplet) {
+		pApplet.pushMatrix();
+		pApplet.translate(x, y);
+	   
+		pApplet.popMatrix();	
+	}
+
+	
+
+
+
+}

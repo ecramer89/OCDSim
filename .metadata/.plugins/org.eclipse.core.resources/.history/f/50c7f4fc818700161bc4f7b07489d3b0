@@ -1,0 +1,13 @@
+package interactiveWindow;
+
+import processing.core.PApplet;
+
+public class TextBox extends PanelComponent{
+
+	@Override
+	public void drawComponent(PApplet pApplet) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

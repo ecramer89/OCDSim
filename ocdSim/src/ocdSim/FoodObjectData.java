@@ -3,7 +3,7 @@ import processing.core.*;
 import java.util.*;
 
 /* a container for the information that is specific to different instances of Food that appear in the overworld. */
-public class FoodObjectData extends PComponent {
+public class FoodObjectData extends OCDSimComponent {
 	private FoodType type; //the type of food that this food object is
 	private  Map<Concern, Boolean> concerns=new HashMap<Concern, Boolean>(); //the results of each check on each concern
 

@@ -1,0 +1,22 @@
+package interactiveWindow;
+import processing.core.*;
+import java.util.*;
+
+public class Panel extends WindowComponent {
+	
+	private ArrayList<MouseListener> mouseListeners;
+	private ArrayList<WidowComponent> children;
+	
+	
+	public Panel(){
+		mouseListeners=new ArrayList<MouseListener>();
+	}
+	
+	
+	public void addMouseListener(MouseListener mouseListener){
+		mouseListeners.add(mouseListener);
+	}
+	
+	
+
+}

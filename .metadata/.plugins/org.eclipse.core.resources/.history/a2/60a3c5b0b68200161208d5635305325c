@@ -1,0 +1,10 @@
+package interactiveWindow;
+
+public class MessageData {
+
+	private Object data;
+	
+	public Object getData(){
+		return data;
+	}
+}

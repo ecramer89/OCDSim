@@ -1,5 +1,5 @@
 package ocdSim;
 
-public class Food extends PComponent {
+public class Food extends OCDSimComponent {
 
 }

@@ -1,0 +1,10 @@
+package interactiveWindow;
+
+public class ButtonState {
+	
+	private String text;
+	private int textColor;
+	private int bgColor;
+	private PImage img;
+
+}

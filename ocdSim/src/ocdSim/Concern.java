@@ -1,6 +1,6 @@
 package ocdSim;
 
-public class Concern extends PComponent {
+public class Concern extends OCDSimComponent {
 	private boolean active; 
 	private String label;
 	private String confirm="Yes";

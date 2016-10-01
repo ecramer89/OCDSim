@@ -1,6 +1,6 @@
 package ocdSim;
 
-public class ModeTransitioner extends PComponent {
+public class ModeTransitioner extends OCDSimComponent {
 	 /*method invoked when the player collides with a food object in the overworld.*/
 	  
 	

@@ -1,0 +1,55 @@
+package interactiveWindow;
+import processing.core.*;
+import java.util.*;
+
+public class Panel extends PanelComponent implements MouseListener {
+	
+
+	private ArrayList<MouseListener> mouseListeners;
+	private ArrayList<PanelComponent> children;
+	
+	
+	public Panel(){
+		mouseListeners=new ArrayList<MouseListener>();
+	}
+	
+	
+	public void addMouseListener(MouseListener mouseListener){
+		mouseListeners.add(mouseListener);
+	}
+
+
+	public void draw(PApplet pApplet) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(int mouseX, int mouseY) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(int mouseX, int mouseY) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public boolean wasPressed(int mouseX, int mouseY) {
+		// TODO Auto-generated method stub
+	    return pointIn(mouseX, mouseY);
+	}
+
+
+	
+	
+	
+	
+	
+
+}

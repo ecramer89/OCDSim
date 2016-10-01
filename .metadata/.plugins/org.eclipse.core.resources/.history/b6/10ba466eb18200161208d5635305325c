@@ -1,0 +1,41 @@
+package interactiveWindow;
+import java.util.*;
+
+import processing.core.*;
+
+/* a class that represents the top level container of an interactive 2d window*/
+public class Window {
+	
+	private ArrayList<Panel> panels;
+	private Panel activePanel;
+	
+	
+	public Window(){
+		panels=new ArrayList<Panel>();
+	}
+	
+	
+	
+	public void addPanel(Panel panel){
+		panels.add(panel);
+		if(activePanel==null){
+			activePanel=panel;
+		}
+	}
+	
+	
+	public void draw(PApplet pApplet){
+		activePanel.draw(pApplet);
+	}
+	
+	public void mousePressed(PApplet pApplet){
+		activePanel.mousePressed(pApplet.mouseX, pApplet.mouseY);
+	}
+	
+	public void mouseReleased(PApplet pApplet){
+		activePanel.mouseReleased(pApplet);
+	}
+	
+
+	
+}
