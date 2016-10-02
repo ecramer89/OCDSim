@@ -1,8 +1,0 @@
-package ocdSim;
-
-public interface OverworldObjectFactory {
-
-	
-	public OverworldObject generate(PVector pos, PVector dim, float parentTranslationX, float parentTranslationZ, float checkRadius, PVector quaternion); 
-	  
-}

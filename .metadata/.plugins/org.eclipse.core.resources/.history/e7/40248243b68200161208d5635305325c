@@ -1,7 +1,0 @@
-package interactiveWindow;
-
-public abstract class Message {
-	
-	public void send(Object sender);
-
-}

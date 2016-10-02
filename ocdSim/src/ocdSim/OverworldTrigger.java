@@ -20,8 +20,8 @@ public class OverworldTrigger extends OverworldObject {
 	   
 	   @Override
 	 public void render() {
-	    pSimulator.fill(255);
-	    pSimulator.rect(-dim.x/2, -dim.y*2, dim.x, dim.y);
+	    ocdSimulator.fill(255);
+	    ocdSimulator.rect(-dim.x/2, -dim.y*2, dim.x, dim.y);
 	  }
 
 	@Override

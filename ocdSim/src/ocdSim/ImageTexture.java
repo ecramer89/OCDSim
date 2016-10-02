@@ -10,7 +10,7 @@ public class ImageTexture extends Texture {
 
 	@Override
 	public void apply() {
-		pSimulator.image(img, -img.width/2, -img.height/2);
+		ocdSimulator.image(img, -img.width/2, -img.height/2);
 
 	}
 

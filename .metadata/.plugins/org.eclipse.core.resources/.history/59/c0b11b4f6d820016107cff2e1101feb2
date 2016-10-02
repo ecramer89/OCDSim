@@ -1,5 +1,0 @@
-package ocdSim;
-
-public class ConcernEvent extends PComponent {
-
-}

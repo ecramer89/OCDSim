@@ -20,7 +20,7 @@ public class Concern extends OCDSimComponent {
 	}
 
 	public boolean computeResult() {
-		float result=pSimulator.random(1);
+		float result=ocdSimulator.random(1);
 		return (result<=probabilityUnsafe);
 	}
 

@@ -28,7 +28,7 @@ public class OverworldFood extends OverworldObject {
 
 	@Override
 	protected void render() {
-		pSimulator.image(data.getImage(), -dim.x/2, -dim.y*2);
+		ocdSimulator.image(data.getImage(), -dim.x/2, -dim.y*2);
 
 	}
 
@@ -37,7 +37,7 @@ public class OverworldFood extends OverworldObject {
 	public OverworldObject generate(PVector pos, PVector dim, float parentTranslationX, float parentTranslationZ,
 			float checkRadius, PVector quaternion) {
 		
-	    return new OverworldFood(pos, dim, parentTranslationX, parentTranslationZ, checkRadius, quaternion, new FoodObjectData(pSimulator.getFoodTypeManager().getRandomFoodType()));
+	    return new OverworldFood(pos, dim, parentTranslationX, parentTranslationZ, checkRadius, quaternion, new FoodObjectData(ocdSimulator.getFoodTypeManager().getRandomFoodType()));
 	}
 
 }

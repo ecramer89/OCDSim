@@ -1,0 +1,41 @@
+package ocdSim;
+import interactiveWindow.*;
+
+
+public class FoodChoicePanel extends Panel {
+
+	private OCDSimulator ocdSimulator;
+	Panel chooseFood;
+	TextBox chooseFoodText;
+	
+	public FoodChoicePanel(OCDSimulator simulator){
+		this.ocdSimulator=simulator;
+		chooseFood=new Panel();
+		chooseFood.setBackground(0);
+		chooseFood.setCenter(ocdSimulator.width/2, ocdSimulator.height/2);
+		chooseFood.setSize(ocdSimulator.width*.8f, ocdSimulator.height*.8f);
+		
+		chooseFoodText=new TextBox();
+		chooseFoodText.setText("Testing");
+		chooseFoodText.setTextColor(255);
+		chooseFoodText.setSize(chooseFood.getWidth()*.66f, chooseFood.getHeight()*.15f);
+		chooseFoodText.setCenter(chooseFood.getCenterX(), chooseFood.getCenterY()-chooseFoodText.getHeight()/2);
+		chooseFoodText.setTextSize(20);
+		chooseFood.add(chooseFoodText);
+		
+		Button yes=new Button();
+		float bWidth=chooseFood.getWidth()*.8f/3;
+		float bHeight=chooseFood.getHeight()*.1f;
+        float bGap=chooseFood.getWidth()*.05f;
+		yes.setSize(bWidth, bHeight);
+		yes.setCenter(chooseFood.getLeftX()+bGap+bWidth/2, chooseFood.getLowerY()-bHeight);
+		yes.setBackground(120);
+		yes.setDefaultState(new ButtonState(yes, "Yes", 120));
+		chooseFood.add(yes);
+		chooseFood.addMouseListener(yes);
+	
+		addPanel(chooseFood);
+		
+	}
+	
+}

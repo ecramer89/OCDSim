@@ -4,11 +4,11 @@ import processing.core.*;
 
 public class OCDSimComponent {
     
-	protected static OCDSimulator pSimulator;
+	protected static OCDSimulator ocdSimulator;
 	
 	
 	public static void setPApplet(OCDSimulator pSimulator){
-		OCDSimComponent.pSimulator=pSimulator;
+		OCDSimComponent.ocdSimulator=pSimulator;
 	}
 	
 	

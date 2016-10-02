@@ -8,13 +8,13 @@ public class FoodTypeManager extends OCDSimComponent {
 	
 	
 	public FoodTypeManager(){
-		FoodType apple=new FoodType(pSimulator.loadImage("C:/Users/root960/OCDSim/ocdSim/data/images/produce/Apple.png"), "Apple", "Eat the apple?");
-		apple.addConcern(pSimulator.getConcernManager().getConcern(ConcernManager.ORGANIC));
+		FoodType apple=new FoodType(ocdSimulator.loadImage("C:/Users/root960/OCDSim/ocdSim/data/images/produce/Apple.png"), "Apple", "Eat the apple?");
+		apple.addConcern(ocdSimulator.getConcernManager().getConcern(ConcernManager.ORGANIC));
 		foodTypes.add(apple);
 	}
 	
 	public FoodType getRandomFoodType(){
-		return foodTypes.get((int)pSimulator.random(foodTypes.size()));	
+		return foodTypes.get((int)ocdSimulator.random(foodTypes.size()));	
 
 	}
 	

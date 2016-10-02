@@ -45,5 +45,15 @@ public class TextBox extends PanelComponent{
 		
 	}
 
+	public void setTextSize(int textSize) {
+		this.textSize=textSize;
+		
+	}
+
+	public String getText() {
+		// TODO Auto-generated method stub
+		return text;
+	}
+
 
 }

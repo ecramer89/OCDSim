@@ -13,6 +13,7 @@ public class Image extends PanelComponent {
 	   if(hasPImage()){
 		   pApplet.image(rawImg, -width/2, -height/2);
 	   }
+	   pApplet.popMatrix();
 		
 	}
 
@@ -23,7 +24,8 @@ public class Image extends PanelComponent {
 
 	public void setPImage(PImage img) {
 		this.rawImg=img;
-		rawImg.resize(width, height);	
+		
+		rawImg.resize((rawImg.width>width? width:rawImg.width), (rawImg.height>height? height:rawImg.height));	
 	}
 
 	public PImage getPImage() {

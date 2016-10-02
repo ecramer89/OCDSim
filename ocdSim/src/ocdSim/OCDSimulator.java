@@ -14,10 +14,8 @@ public class OCDSimulator extends PApplet {
     private AssetManager assetManager;
 	private static ModeTransitioner transitioner;
 	private static GameMode currentMode;
+	
 
-
-
-	private Overworld overWorld;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -28,7 +26,7 @@ public class OCDSimulator extends PApplet {
 	
 
 	public void settings(){
-		size(displayWidth, displayHeight,P3D);
+		size(800, 800,P3D);
 		OCDSimComponent.setPApplet(this);
 
 	}
@@ -40,8 +38,8 @@ public class OCDSimulator extends PApplet {
 		setAssetManager(new AssetManager());
 		setFoodTypeManager(new FoodTypeManager());
 		setGameParameters(new GameParameters());
-		overWorld=new Overworld();
-		currentMode=overWorld;	
+		transitioner.beginGame();
+		
 	}
 
 	public void draw(){

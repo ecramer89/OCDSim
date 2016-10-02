@@ -9,9 +9,9 @@ public class AssetManager extends OCDSimComponent {
 	private static PImage EMPTY_IMAGE;
 	
 	public AssetManager(){
-		sky=pSimulator.color(255);
-		ground=new ColorTexture(pSimulator.color(96, 165, 7));
-		EMPTY_IMAGE=pSimulator.loadImage("C:/Users/root960/OCDSim/ocdSim/data/images/empty.png");
+		sky=ocdSimulator.color(255);
+		ground=new ColorTexture(ocdSimulator.color(96, 165, 7));
+		EMPTY_IMAGE=ocdSimulator.loadImage("C:/Users/root960/OCDSim/ocdSim/data/images/empty.png");
 		
 	}
 	

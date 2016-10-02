@@ -23,8 +23,8 @@ public abstract class OverworldObject extends OCDSimComponent {
 		absoluteTranslation=pos.get();
 		this.quaternion=quaternion;
 		updatePerceivedTranslation(parentTranslationX, parentTranslationZ);
-		dAngleY=pSimulator.radians(1);
-		yAngleGive=pSimulator.radians(1);
+		dAngleY=ocdSimulator.radians(1);
+		yAngleGive=ocdSimulator.radians(1);
 	}
 	
 	
@@ -64,23 +64,23 @@ public abstract class OverworldObject extends OCDSimComponent {
 
 
 	protected void turnTowardsTarget() {
-		if (pSimulator.abs(targetAngleY-quaternion.y)>yAngleGive) {
+		if (ocdSimulator.abs(targetAngleY-quaternion.y)>yAngleGive) {
 			if (targetAngleY>quaternion.y) {
-				dAngleY=pSimulator.abs(dAngleY);
+				dAngleY=ocdSimulator.abs(dAngleY);
 			} else {
-				dAngleY=-pSimulator.abs(dAngleY);
+				dAngleY=-ocdSimulator.abs(dAngleY);
 			}
 			quaternion.y+=dAngleY;
 		}
 	}
 
 	private void draw() {
-		pSimulator.pushMatrix();
-		pSimulator.pushStyle();
-		pSimulator.translate(pos);
-		pSimulator.rotate(quaternion);
+		ocdSimulator.pushMatrix();
+		ocdSimulator.pushStyle();
+		ocdSimulator.translate(pos);
+		ocdSimulator.rotate(quaternion);
 		render();
-		pSimulator.popStyle();
-		pSimulator.popMatrix();
+		ocdSimulator.popStyle();
+		ocdSimulator.popMatrix();
 	}
 }

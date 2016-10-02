@@ -1,0 +1,81 @@
+package ocdSim;
+
+import interactiveWindow.*;
+import processing.core.*;
+
+/*a class that represents the game mode that runs (any kind of) screen*/
+public class WindowMode extends OCDSimComponent implements GameMode {
+	
+	private Window active; //the Window we are currently displaying.
+	private Window foodChoiceWindow;
+	private Window concernEventWindow;
+	
+	
+	public WindowMode(){
+		//inialize the concern event window *maybe consider making concerneventWindow and foodchoiceWindow sep. subclasses of window.
+		foodChoiceWindow=new Window();
+		
+		Panel chooseFood=new Panel();
+		chooseFood.setBackground(0);
+		chooseFood.setCenter(ocdSimulator.width/2, ocdSimulator.height/2);
+		chooseFood.setSize(ocdSimulator.width*.8f, ocdSimulator.height*.8f);
+		
+		
+		
+		TextBox foodText=new TextBox();
+		foodText.setText("Testing");
+		foodText.setTextColor(255);
+		foodText.setSize(chooseFood.getWidth()*.66f, chooseFood.getHeight()*.15f);
+		foodText.setCenter(chooseFood.getCenterX(), chooseFood.getCenterY()-foodText.getHeight()/2);
+		foodText.setTextSize(20);
+		chooseFood.add(foodText);
+		
+		Button yes=new Button();
+		float bWidth=chooseFood.getWidth()*.8f/3;
+		float bHeight=chooseFood.getHeight()*.1f;
+        float bGap=chooseFood.getWidth()*.05f;
+		yes.setSize(bWidth, bHeight);
+		yes.setCenter(chooseFood.getLeftX()+bGap+bWidth/2, chooseFood.getLowerY()-bHeight);
+		yes.setBackground(120);
+		yes.setDefaultState(new ButtonState(yes, "Yes", 120));
+		chooseFood.add(yes);
+		chooseFood.addMouseListener(yes);
+	
+		foodChoiceWindow.addPanel(chooseFood);
+		
+		
+		active=foodChoiceWindow;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		active.draw(ocdSimulator);
+		
+	}
+
+	@Override
+	public void handleKeyReleased() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleMousePressed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleMouseReleased() {
+		active.mousePressed();
+		
+	}
+
+	@Override
+	public void handleKeyPressed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

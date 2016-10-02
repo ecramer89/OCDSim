@@ -1,7 +1,0 @@
-package interactiveWindow;
-import processing.core.*;
-
-public class Panel extends WindowComponent {
-	
-
-}

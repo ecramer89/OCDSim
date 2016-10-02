@@ -10,11 +10,11 @@ public class ColorTexture extends Texture {
 
 	@Override
 	public void apply() {
-		pSimulator.pushStyle();
-		pSimulator.noStroke();
-		pSimulator.fill(fill);
-		pSimulator.rect(-dimensions.x/2, -dimensions.y/2, dimensions.x, dimensions.y);
-		pSimulator.popStyle();
+		ocdSimulator.pushStyle();
+		ocdSimulator.noStroke();
+		ocdSimulator.fill(fill);
+		ocdSimulator.rect(-dimensions.x/2, -dimensions.y/2, dimensions.x, dimensions.y);
+		ocdSimulator.popStyle();
 
 	}
 

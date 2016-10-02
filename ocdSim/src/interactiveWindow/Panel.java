@@ -9,7 +9,19 @@ public class Panel extends PanelComponent implements MouseListener {
 
 
 	public Panel(){
+		children=new ArrayList<PanelComponent>();
 		mouseListeners=new ArrayList<MouseListener>();
+	}
+	
+	
+	public void add(PanelComponent child){
+		children.add(child);
+	}
+	
+	public void reset(){
+		for(PanelComponent child : children){
+			child.reset();
+		}
 	}
 
 

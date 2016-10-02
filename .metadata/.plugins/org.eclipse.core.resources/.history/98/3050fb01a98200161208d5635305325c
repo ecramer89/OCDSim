@@ -1,5 +1,0 @@
-package ocdSim;
-
-public class AssetManager extends PComponent {
-
-}

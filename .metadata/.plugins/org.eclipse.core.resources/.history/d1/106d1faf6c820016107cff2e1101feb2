@@ -1,8 +1,0 @@
-package ocdSim;
-
-import processing.core.*;
-
-public class PComponent {
-
-	protected static PApplet pApplet;
-}

@@ -5,13 +5,13 @@ public class OverworldJewel extends OverworldObject {
 
 	int fill;
 	int faces;
-	float faceTheta=pSimulator.PI/4;
+	float faceTheta=ocdSimulator.PI/4;
 
 	public OverworldJewel(PVector pos, PVector dim, float parentTranslationX, float parentTranslationZ, float triggerRadius, PVector quaternion) {
 		super(pos, dim, parentTranslationX, parentTranslationZ, triggerRadius, quaternion);
-		float rand=pSimulator.random(1);
-		fill=(rand<.15? pSimulator.color(255, 0, 0): rand<.3? pSimulator.color(0, 255, 0) : rand<.6?pSimulator.color(0, 0, 255): rand<.9? pSimulator.color(255, 255, 0) : pSimulator.color(225, 0, 255));
-		faces=(int)(pSimulator.TWO_PI/faceTheta);
+		float rand=ocdSimulator.random(1);
+		fill=(rand<.15? ocdSimulator.color(255, 0, 0): rand<.3? ocdSimulator.color(0, 255, 0) : rand<.6?ocdSimulator.color(0, 0, 255): rand<.9? ocdSimulator.color(255, 255, 0) : ocdSimulator.color(225, 0, 255));
+		faces=(int)(ocdSimulator.TWO_PI/faceTheta);
 	}
 
 
@@ -29,19 +29,19 @@ public class OverworldJewel extends OverworldObject {
 
 	@Override
 	public void handleCollisionWithPlayer() {
-		pSimulator.getGameParameters().updateJewelsCollected(1);
+		ocdSimulator.getGameParameters().updateJewelsCollected(1);
 
 	}
 
 	@Override
 	protected void render() {
-		pSimulator.noStroke();
-		pSimulator.rotateZ(pSimulator.PI/4);
+		ocdSimulator.noStroke();
+		ocdSimulator.rotateZ(ocdSimulator.PI/4);
 
 		for (int i=0; i<faces; i++) {
-			pSimulator.fill(pSimulator.red(fill)/(i+1), pSimulator.green(fill)/(i+1), pSimulator.blue(fill)/(i+1));
-			pSimulator.rotateY(faceTheta);
-			pSimulator.rect(-dim.x/2, -dim.y*2, dim.x, dim.y);
+			ocdSimulator.fill(ocdSimulator.red(fill)/(i+1), ocdSimulator.green(fill)/(i+1), ocdSimulator.blue(fill)/(i+1));
+			ocdSimulator.rotateY(faceTheta);
+			ocdSimulator.rect(-dim.x/2, -dim.y*2, dim.x, dim.y);
 		}
 
 	}
