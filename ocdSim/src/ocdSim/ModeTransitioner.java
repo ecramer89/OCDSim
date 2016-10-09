@@ -13,7 +13,9 @@ public class ModeTransitioner extends OCDSimComponent {
 	}
 
 	public void encounteredFood(OverworldFood foodObject) {
-		windowMode.encounteredFood(foodObject.getFoodData());
+		FoodObjectData data=foodObject.getFoodData();
+		data.computeAndStoreResultsForConcerns();
+		windowMode.encounteredFood(data);
 		OCDSimulator.setCurrentGameMode(windowMode);
 	}
 

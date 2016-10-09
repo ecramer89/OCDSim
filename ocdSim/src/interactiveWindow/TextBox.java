@@ -55,5 +55,10 @@ public class TextBox extends PanelComponent{
 		return text;
 	}
 
+	public int length() {
+		// TODO Auto-generated method stub
+		return text.length();
+	}
+
 
 }

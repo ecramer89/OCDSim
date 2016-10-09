@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;interactiveWindow.ButtonState.updateSize(...)&apos; to &apos;setSize&apos;&#x0D;&#x0A;- Original project: &apos;ocdSim&apos;&#x0D;&#x0A;- Original element: &apos;interactiveWindow.ButtonState.updateSize(...)&apos;&#x0D;&#x0A;- Renamed element: &apos;interactiveWindow.ButtonState.setSize(...)&apos;&#x0D;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;updateSize&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;interactiveWindow{ButtonState.java[ButtonState~updateSize~QButton;" name="setSize" references="true" stamp="1475974367023" version="1.0"/>
+</session>

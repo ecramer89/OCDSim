@@ -25,7 +25,7 @@ public class Window {
 
 	
 	/*assumes that active belongs to the list of the panels. should only be invoked interally*/
-	protected void updateActivePanel(Panel active){
+	protected void setActivePanel(Panel active){
 		activePanel=active;
 	}
 	

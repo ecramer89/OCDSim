@@ -1,0 +1,188 @@
+package ocdSim;
+
+import java.util.ArrayList;
+
+import interactiveWindow.*;
+
+public class FoodChoiceWindow extends Window {
+	private int defaultColor;
+	private int defaultButtonColor;
+	private int defaultFontSize;
+
+	//*the FoodChoicePanel data*/
+	private Panel foodChoicePanel;
+	private TextBox chooseFoodText;
+	private Image chooseFoodImage;
+
+
+	/*the check option panel data */
+	private Panel checkOptionPanel;
+	private ArrayList<Button> checkOptions;
+	private int currCheckOption;
+	private Button backButton;
+	private Button nextConcernButton;
+
+	private OCDSimulator ocdSimulator;
+	
+
+	public FoodChoiceWindow(OCDSimulator simulator){
+		this.ocdSimulator=simulator;
+		defaultFontSize=(int)(ocdSimulator.width/40);
+		defaultColor=0;
+		defaultButtonColor=(255-defaultColor)/2;
+		initializeFoodChoicePanel();
+		addPanel(foodChoicePanel);
+		initializeCheckOptionPanel();
+		addPanel(checkOptionPanel);
+		setActivePanel(checkOptionPanel);
+
+
+	}
+
+	private void initializeFoodChoicePanel(){
+		foodChoicePanel=new Panel();
+		foodChoicePanel.setBackground(defaultColor);
+		foodChoicePanel.setCenter(ocdSimulator.width/2, ocdSimulator.height/2);
+		foodChoicePanel.setSize(ocdSimulator.width*.8f, ocdSimulator.height*.8f);
+
+		//initialize the text that asks if you want to eat the (X)
+		chooseFoodText=new TextBox();
+		chooseFoodText.setText("Testing");
+		chooseFoodText.setTextColor(255-defaultColor);
+		chooseFoodText.setSize(foodChoicePanel.getWidth()*.66f, foodChoicePanel.getHeight()*.15f);
+		chooseFoodText.setCenter(foodChoicePanel.getCenterX(), foodChoicePanel.getUpperY()+chooseFoodText.getHeight()/2);
+		chooseFoodText.setTextSize(defaultFontSize);
+		foodChoicePanel.add(chooseFoodText);
+
+
+		//initialize Buttons (yes, no, check)
+		Button yes=new Button();
+
+		float bWidth=foodChoicePanel.getWidth()*.8f/3;
+		float bHeight=foodChoicePanel.getHeight()*.1f;
+		float bGap=foodChoicePanel.getWidth()*.05f;
+		yes.setSize(bWidth, bHeight);
+		yes.setCenter(foodChoicePanel.getLeftX()+bGap+bWidth/2, foodChoicePanel.getLowerY()-bHeight);
+		yes.setBackground(defaultButtonColor);
+		yes.setPreferredTextSize(defaultFontSize);
+		yes.setDefaultState(new ButtonState(yes, "Yes", 120));
+		foodChoicePanel.add(yes);
+		foodChoicePanel.addMouseListener(yes);
+
+		Button no=new Button();
+		no.setSize(bWidth, bHeight);
+		no.setCenter(foodChoicePanel.getLeftX()+bGap*2+bWidth/2+bWidth, foodChoicePanel.getLowerY()-bHeight);
+		no.setBackground(defaultButtonColor);
+		no.setPreferredTextSize(defaultFontSize);
+		no.setDefaultState(new ButtonState(no, "No", 120));
+
+		foodChoicePanel.add(no);
+		foodChoicePanel.addMouseListener(no);
+
+		Button check=new Button();
+		check.setSize(bWidth, bHeight);
+		check.setCenter(foodChoicePanel.getLeftX()+bGap*3+bWidth/2+bWidth*2, foodChoicePanel.getLowerY()-bHeight);
+		check.setBackground(defaultButtonColor);
+		check.setPreferredTextSize(defaultFontSize);
+		check.setDefaultState(new ButtonState(no, "Check", 120));
+
+		foodChoicePanel.add(check);
+		foodChoicePanel.addMouseListener(check);
+
+		//initialize the image that shows the current food object.
+		chooseFoodImage=new Image();
+		chooseFoodImage.setCenter(foodChoicePanel.getCenterX(), foodChoicePanel.getCenterY());
+		chooseFoodImage.setSize(foodChoicePanel.getWidth()*.33f, .80f*(yes.getUpperY()-chooseFoodText.getLowerY()));
+		chooseFoodImage.setBackground(defaultColor);
+		foodChoicePanel.add(chooseFoodImage); 
+
+
+
+
+	}
+
+
+	private void initializeCheckOptionPanel(){
+		// TODO Auto-generated method stub
+		checkOptionPanel=new Panel();
+		checkOptionPanel.setBackground(defaultColor);
+		checkOptionPanel.setCenter(ocdSimulator.width/2, ocdSimulator.height/2);
+		checkOptionPanel.setSize(ocdSimulator.width*.8f, ocdSimulator.height*.8f);
+		checkOptionPanel.add(chooseFoodImage);
+
+
+		//want the checkoption panel to have in addition to its list of children a list of buttons that it can iterate through, activating and de-activing...
+		//i thik I will make these into separate classes also, but for nw I will just store the checkoption buttons here (and iterate thru them in this class)
+		checkOptions=new ArrayList<Button>();
+		float bWidth=checkOptionPanel.getWidth()*.8f/3;
+		float bHeight=checkOptionPanel.getHeight()*.1f;
+		for(int i=0;i<ConcernManager.getNumConcerns(); i++){
+			Button b = new Button();
+			b.setBackground(defaultButtonColor);
+			b.setCenter(checkOptionPanel.getCenterX(), checkOptionPanel.getUpperY()+bHeight);
+			b.setSize(bWidth, bHeight);
+			b.setDefaultState(new ButtonState(b, "Check\nOption", defaultButtonColor));
+			b.addState(new ButtonState(b, "Result", defaultButtonColor));
+			checkOptions.add(b);
+			checkOptionPanel.add(b);
+			checkOptionPanel.addMouseListener(b);
+		}
+
+		backButton=new Button();
+		backButton.setBackground(defaultButtonColor);
+		backButton.setSize(bWidth, bHeight);
+		backButton.setCenter(checkOptionPanel.getCenterX(), chooseFoodImage.getLowerY());
+		backButton.setDefaultState(new ButtonState(backButton, "Done", defaultButtonColor));
+		checkOptionPanel.addMouseListener(backButton);
+		checkOptionPanel.add(backButton);
+		
+		
+		nextConcernButton=new Button();
+		nextConcernButton.setBackground(defaultButtonColor);
+		nextConcernButton.setCenter(checkOptionPanel.getRightX()-bWidth/2, checkOptionPanel.getCenterY());
+        nextConcernButton.setSize(bWidth,bHeight);
+        checkOptionPanel.addMouseListener(nextConcernButton);
+        nextConcernButton.setDefaultState(new ButtonState(nextConcernButton, "Next", defaultButtonColor));
+        checkOptionPanel.add(nextConcernButton);
+	}
+
+	public void updatePanels(FoodObjectData data){
+		updateFoodChoicePanel(data);
+		updateCheckOptionPanel(data);
+	}
+
+	private void updateCheckOptionPanel(FoodObjectData data) {
+		//update the concern buttons
+		ArrayList<Concern> concerns=data.getConcerns();
+		int concernIdx=0;
+		for(Button b : checkOptions){
+			if(concernIdx<concerns.size()){
+				Concern concern=concerns.get(concernIdx);
+				if(concern.isActive()){
+					b.updateDefaultState(concern.getLabel());
+					b.updateState(1, data.getConcernResultAsString(concern));
+				}
+				concernIdx++;
+			}
+			else {
+				b.updateDefaultState("");
+				b.updateState(1, "");
+			}
+		}
+		
+		checkOptionPanel.reset();
+	}
+
+	private void updateFoodChoicePanel(FoodObjectData data) {
+		chooseFoodText.setText(data.getRequestToEat());
+		chooseFoodImage.setPImage(data.getImage());
+		foodChoicePanel.reset();
+
+	}
+
+
+
+
+
+
+}

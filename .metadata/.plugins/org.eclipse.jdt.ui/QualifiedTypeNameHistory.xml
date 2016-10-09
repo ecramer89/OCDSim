@@ -3,4 +3,6 @@
 <fullyQualifiedTypeName name="interfaces.Test"/>
 <fullyQualifiedTypeName name="processing.core.PApplet"/>
 <fullyQualifiedTypeName name="interactiveWindow.Window"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="ocdSim.FoodObjectData"/>
 </qualifiedTypeNameHistroy>

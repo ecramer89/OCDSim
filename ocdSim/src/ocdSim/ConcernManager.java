@@ -26,6 +26,10 @@ public class ConcernManager {
 		
 	}
 	
+	public static int getNumConcerns(){
+		return concerns.length;
+	}
+	
 	
 	
 	public Concern getConcern(int concernIndex) throws IllegalArgumentException{

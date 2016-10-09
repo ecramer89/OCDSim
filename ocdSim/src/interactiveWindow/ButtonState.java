@@ -31,13 +31,25 @@ public class ButtonState {
 
 	public ButtonState(Button button, String text, int bgColor){
 		this.text=new TextBox();
-		this.text.setSize(button.getWidth(), button.getHeight());
+		this.text.setText(text);
 		this.text.setCenter(0,0); //relative to the button's center.
 		this.text.setText(text);
 		this.bgColor=bgColor;
 		this.text.setTextColor((int)(bgColor<120? bgColor*2.5:bgColor/2.5));
-		this.text.setTextSize(button.hasPreferredTextSize() ? button.getPreferredTextSize(): Math.max(20, button.getWidth()/2/text.length()));	
 		img=new Image();
+		setSize(button);
+	}
+	
+	public void setSize(Button button){
+		text.setSize(button.getWidth(), button.getHeight());
+		text.setTextSize(button.hasPreferredTextSize() ? button.getPreferredTextSize(): Math.max(20, button.getWidth()/2/text.length()));	
+	}
+	
+
+
+	public void setText(String text) {
+		this.text.setText(text);
+		
 	}
 
 

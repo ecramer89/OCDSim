@@ -1,7 +1,0 @@
-package interactiveWindow;
-
-public class Timer {
-	
-	private TimerListener listener;
-
-}

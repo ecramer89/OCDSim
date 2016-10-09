@@ -6,3 +6,5 @@
 1475370246913	Rename type 'FoodChoiceWindow'
 1475375717568	Delete element
 1475378103145	Rename method 'gameBegun'
+1475933865266	Rename field 'buttonColor'
+1475934264038	Rename method 'updateActivePanel'

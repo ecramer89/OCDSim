@@ -47,5 +47,20 @@ public class FoodObjectData extends OCDSimComponent {
 	  boolean hasResultFor(Concern concern) {
 	    return concerns.get(concern)!=null;
 	  }
+
+	public void computeAndStoreResultsForConcerns() {
+		for(Concern c : concerns.keySet()){
+			storeResultOfCheck(c, c.computeResult());
+		}
+		
+	}
+
+	public String getConcernResultAsString(Concern concern) {
+		// TODO Auto-generated method stub
+		if(getResultFor(concern)){
+			return "Yes.";
+		}
+		return "No.";
+	}
 	
 }

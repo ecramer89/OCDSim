@@ -27,8 +27,8 @@ public class Button extends PanelComponent implements MouseListener, TimerListen
 		pressedTimer=new Timer(this, 30);
 		currStateIndex=-1;
 		currMessageIndex=0;
-
-
+        addState(new ButtonState(this, "Press", 120));
+        changeState();
 	}
 
 
@@ -59,6 +59,15 @@ public class Button extends PanelComponent implements MouseListener, TimerListen
 
 		}
 
+	}
+	
+	
+	@Override
+	public void setSize(float width, float height){
+		super.setSize(width, height);
+		for(ButtonState bState : buttonStates){
+			bState.setSize(this);
+		}
 	}
 
 	private void changeState(){
@@ -111,6 +120,7 @@ public class Button extends PanelComponent implements MouseListener, TimerListen
 		pApplet.translate(x, y);
 		currentState.getImg().drawComponent(pApplet);
 		currentState.getText().drawComponent(pApplet);
+	
 		pApplet.popMatrix();	
 	}
 
@@ -126,11 +136,22 @@ public class Button extends PanelComponent implements MouseListener, TimerListen
 		setBackground(currentState.getBgColor());
 	}
 
-	public void setDefaultState(ButtonState buttonState) {
-		buttonStates.add(0, buttonState);
+	public void setDefaultState(String text, int bgColor) {
+		updateState(0, text, bgColor);
 		resetStateIndex();
 		changeState();
 	}
+
+	private void updateState(int i, String text, int bgColor) {
+		updateState(i, text);
+		if(i<buttonStates.size()){
+			ButtonState state=buttonStates.get(i);
+			state.setBgColor(bgColor);
+		}
+		
+	}
+
+
 
 	public void addState(ButtonState buttonState){
 		buttonStates.add(buttonState);
@@ -181,6 +202,23 @@ public class Button extends PanelComponent implements MouseListener, TimerListen
 	public boolean hasPreferredTextSize() {
 		// TODO Auto-generated method stub
 		return preferredTextSize>0;
+	}
+
+
+
+	public void updateState(int indexOfState, String text) {
+		if(indexOfState<buttonStates.size()){
+			ButtonState state=buttonStates.get(indexOfState);
+			state.setText(text);
+		}
+		
+	}
+
+
+
+	public void updateDefaultState(String text) {
+		updateState(0, text);
+		
 	}
 
 

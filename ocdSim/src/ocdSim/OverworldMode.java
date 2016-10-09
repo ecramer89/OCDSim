@@ -180,11 +180,11 @@ public class OverworldMode extends OCDSimComponent implements GameMode{
 
 			void updateVectors() {
 				currViewAngle=angleEyeGameWorld+gameWorld.getAngle();
-				forward.x=ocdSimulator.cos(currViewAngle)*SCROLL_SPEED;
-				forward.z=ocdSimulator.sin(currViewAngle)*SCROLL_SPEED;
-				currViewAngle+=ocdSimulator.PI; //backwards
-				backward.x=ocdSimulator.cos(currViewAngle)*SCROLL_SPEED; 
-				backward.z=ocdSimulator.sin(currViewAngle)*SCROLL_SPEED;
+				forward.x=PApplet.cos(currViewAngle)*SCROLL_SPEED;
+				forward.z=PApplet.sin(currViewAngle)*SCROLL_SPEED;
+				currViewAngle+=PConstants.PI; //backwards
+				backward.x=PApplet.cos(currViewAngle)*SCROLL_SPEED; 
+				backward.z=PApplet.sin(currViewAngle)*SCROLL_SPEED;
 			}
 
 
